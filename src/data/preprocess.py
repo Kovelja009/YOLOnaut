@@ -59,4 +59,3 @@ class ParseDataset(object):
     def __init__(self, image_size, S):
         self.image_size = image_size
         self.S = S
-

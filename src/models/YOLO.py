@@ -18,21 +18,6 @@ class ResNet50Bottom(torch.nn.Module):
         x = self.features(x)
         return x
 
-class Clipper(torch.nn.Module):
-    """ Custom Linear layer but mimics a standard linear layer """
-    def __init__(self):
-        super().__init__()
-        # self.size_in, self.size_out = size_in, size_out
-        # weights = torch.Tensor(size_out, size_in)
-        # self.weights = torch.nn.Parameter(weights)  # nn.Parameter is a Tensor that's a module parameter.
-        # bias = torch.Tensor(size_out)
-        # self.bias = torch.nn.Parameter(bias)
-
-        # initialize weights and biases
-        # torch.nn.init.kaiming_uniform_(self.weights, a=math.sqrt(5)) # weight init
-        # fan_in, _ = torch.nn.init._calculate_fan_in_and_fan_out(self.weights)
-        # bound = 1 / math.sqrt(fan_in)
-        # torch.nn.init.uniform_(self.bias, -bound, bound)  # bias init
 
     def forward(self, x):
         return torch.clip(x, 0, 1)
@@ -57,9 +42,7 @@ class YOLO(torch.nn.Module):
             torch.nn.Linear(1024, 4096),
             torch.nn.Dropout(0.5),
             torch.nn.Linear(4096, 7 * 7 * 30),
-            Clipper()
         )
-        # self.clipper = Clipper()
     
     def forward(self, x):
         x = self.backbone(x)

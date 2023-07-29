@@ -5,6 +5,8 @@ import sys
 sys.path.insert(0, './src/utils')
 import utils
 
+import math
+
 
 # TODO: Generally, make function names full and then shorten the names of
 # variabels they are assigned to.
@@ -20,7 +22,8 @@ class YOLOLoss:
         self.C = C
     
     def __call__(self, prediction, target):
-        target = self.unique_detections_per_cell(target)
+        # TODO: Uncomment this once the function is implemented.
+        # target = self.unique_detections_per_cell(target)
         # TODO: Make this less patchy.
         if len(target.shape) == 1:
             torch.unsqueeze(target, 0)
@@ -30,6 +33,7 @@ class YOLOLoss:
         classes_loss = self.class_loss(prediction, target)
 
         return coordinate_loss + object_noobject_loss + classes_loss
+
     
     def coord_loss(self, prediction, target):
         sum_loss = 0.0
@@ -46,12 +50,11 @@ class YOLOLoss:
 
             x_box, y_box, w_box, h_box = prediction[i, j, max_b * 5:max_b * 5 + 4]
 
-
             # print('print', x_box, y_box, w_box, h_box, x_true, y_true, w_true, h_true)
             # TODO: check if max_iou should be in this formula.
             # TODO: Try without hardcoding forcing positive width and height.
-            sum_loss += (x_box - x_true) ** 2 + (y_box - y_true) ** 2 + (torch.sqrt(w_box) - torch.sqrt(w_true)) ** 2 + (
-                    torch.sqrt(h_box) - torch.sqrt(h_true)) ** 2 + 1000 * (abs(w_box) - w_box) + 1000 * (abs(h_box) - h_box)
+            sum_loss += (x_box - x_true) ** 2 + (y_box - y_true) ** 2 + math.sqrt(2) * (w_box - w_true) ** 2 + math.sqrt(2) * (
+                    h_box - h_true) ** 2
 
         return self.lambda_coord * sum_loss
 
@@ -75,7 +78,6 @@ class YOLOLoss:
 
                     # calc max IoU
                     _, max_b = utils.find_max_iou(i, j, prediction, x_true, y_true, w_true, h_true, self.image_width, self.image_height, self.S, self.B)
-
                     # calc obj loss for box with max IoU
                     confidence_box = prediction[i, j, max_b * 5 + 4]
                     obj_sum_loss += (1 - confidence_box) ** 2
@@ -85,7 +87,7 @@ class YOLOLoss:
                         no_more_targets = True
                     else:
                         curr_cell = target[curr_index][0]
-                ######## noobj loss ########
+                ####### noobj loss ########
                 else:
                     # TODO check for noobj loss -> too strict?
                     for b in range(self.B):
@@ -104,22 +106,18 @@ class YOLOLoss:
 
             # these are one hot vectors
             ground_truth_classes = obj[5:]
+            ground_truth_classes = ground_truth_classes.to('cuda:0')
             predicted_classes = prediction[i, j, 5 * self.B:]
-
             sum_loss += torch.sum((ground_truth_classes - predicted_classes) ** 2)
 
         return sum_loss
-    
-    def unique_detections_per_cell(self, target):
-        # TODO: Check if this can happen at all. If it can, take maximal IoU.
-        unique = target[0]
-        curr = target[0][0]
-        flag = 0
-        for item in target:
-            if item[0] != curr:
-                flag = 1
-                unique = torch.stack((unique, item), dim=0)
-                curr = item[0]
 
-        if flag: return unique
-        return torch.unsqueeze(unique, dim=0)
+    # def unique_detections_per_cell(self, target):
+    #     unique = torch.unsqueeze(target[0], dim=0)
+    #     print(unique.shape)
+    #     curr = target[0][0]
+    #     for item in target:
+    #         if item[0] != curr:
+    #             unique = torch.cat((unique, item), 0)
+    #             curr = item[0]
+    #     return unique
