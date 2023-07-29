@@ -1,0 +1,14 @@
+{
+    "backbone": "resnet50",
+    "parameters": {
+        "global_params": {
+            "learning_rate": 0.00005,
+            "batch_size": 64,
+            "lambda_coord": 5,
+            "lambda_noobj": 0.5,
+            "B": 2,
+            "C": 20,
+            "S": 7,
+        },
+    }
+}

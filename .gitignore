@@ -1,0 +1,7 @@
+*.gz
+*.pyc
+*vanja.py
+*throwavay.py
+*.pth
+*raw*
+*.tar
