@@ -4,3 +4,9 @@
 *throwavay.py
 *raw*
 *.tar
+*.xml
+VOCdevkit/
+*.pth
+*.weights
+run-tiny-yolo-v2.py
+settings.json
