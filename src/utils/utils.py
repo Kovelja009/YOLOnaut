@@ -2,6 +2,12 @@ import cv2
 import numpy as np
 import torch
 
+# TODO: Do not hardcode this here.
+classes = ['person', 'bird', 'cat', 'cow', 'dog', 'horse', 'sheep',
+           'aeroplane', 'bicycle', 'boat', 'bus', 'car', 'motorbike', 'train',
+           'bottle', 'chair', 'dining table', 'potted plant', 'sofa', 'tv/monitor'
+]
+
 # TODO: Too many arguments, pass three: coordinates, dimensions and cell.set
 def convert_to_absolute(x, y, w, h, i, j, image_width, image_height, S):
     cell_width = image_width / S
@@ -155,7 +161,7 @@ def show_grid(img, grid_size):
     return img
 
 
-def show_objects(img, predictions, object_threshold=0.5, S=7, B=2):
+def show_objects(img, predictions, object_threshold=0.6, S=7, B=2):
     for i in range(S):
         for j in range(S):
             highest_class_probability = max(predictions[i, j, B * 5:])
@@ -246,28 +252,28 @@ def draw_ground_truth(img, target, S=7):
 
 
 
-classes = {
-    0: 'aeroplane',
-    1: 'bicycle',
-    2: 'bird',
-    3: 'boat',
-    4: 'bottle',
-    5: 'bus',
-    6: 'car',
-    7: 'cat',
-    8: 'chair',
-    9: 'cow',
-    10: 'dining table',
-    11: 'dog',
-    12: 'horse',
-    13: 'motorbike',
-    14: 'person',
-    15: 'potted plant',
-    16: 'sheep',
-    17: 'sofa',
-    18: 'train',
-    19: 'tv/monitor'
-}
+# classes = {
+#     0: 'aeroplane',
+#     1: 'bicycle',
+#     2: 'bird',
+#     3: 'boat',
+#     4: 'bottle',
+#     5: 'bus',
+#     6: 'car',
+#     7: 'cat',
+#     8: 'chair',
+#     9: 'cow',
+#     10: 'dining table',
+#     11: 'dog',
+#     12: 'horse',
+#     13: 'motorbike',
+#     14: 'person',
+#     15: 'potted plant',
+#     16: 'sheep',
+#     17: 'sofa',
+#     18: 'train',
+#     19: 'tv/monitor'
+# }
 
 # img = load_image("/home/dels/Documents/YOLOnaut/src/utils/third.jpg")
 # # print(img)

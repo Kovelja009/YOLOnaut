@@ -18,10 +18,6 @@ class ResNet50Bottom(torch.nn.Module):
         x = self.features(x)
         return x
 
-
-    def forward(self, x):
-        return torch.clip(x, 0, 1)
-
 class YOLO(torch.nn.Module):
     def __init__(self):
         super(YOLO, self).__init__()
