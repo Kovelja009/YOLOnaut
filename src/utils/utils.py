@@ -6,7 +6,8 @@ import torch
 classes = ['person', 'bird', 'cat', 'cow', 'dog', 'horse', 'sheep',
            'aeroplane', 'bicycle', 'boat', 'bus', 'car', 'motorbike', 'train',
            'bottle', 'chair', 'dining table', 'potted plant', 'sofa', 'tv/monitor'
-]
+           ]
+
 
 # TODO: Too many arguments, pass three: coordinates, dimensions and cell.set
 def convert_to_absolute(x, y, w, h, i, j, image_width, image_height, S):
@@ -51,6 +52,7 @@ def calc_iou(prediction_coord, target_coord, i, j, image_width, image_height, S)
 
     return intersection_area / union_area
 
+
 # TODO: Too many arguments required in general, this should be abstractized.
 # Probably make IoUUtils class which will initialize all these values and then
 # call its methods.
@@ -66,6 +68,7 @@ def find_max_iou(i, j, prediction, x_true, y_true, w_true, h_true, img_width, im
             max_b = b
     return max_iou, max_b
 
+
 # TODO: The following functions should be separated into class VisualUtils.
 
 def show_image(image, predictions, image_width, image_height, S):
@@ -75,9 +78,12 @@ def show_image(image, predictions, image_width, image_height, S):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+
 def show_grid(image, grid_size):
     # print('X',image.shape, grid_size, image_width, image_height, 'X')
     # Step 1: Calculate grid size and spacing
+    print(image.shape, 'image shape')
+
     rows, cols, _ = image.shape
     grid_size = 7
     grid_spacing_rows = rows // (grid_size)
@@ -92,8 +98,9 @@ def show_grid(image, grid_size):
         # Draw vertical lines
         x = i * grid_spacing_cols
         cv2.line(image, (x, 0), (x, rows), (0, 255, 0), 1)
-    
+
     return image
+
 
 # Visualization utils.
 
@@ -139,6 +146,12 @@ def draw_image(path, predictions=None, S=7):
     # cv2.imshow("YOLOnaut", np.ascontiguousarray(img))
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
+
+
+def draw_image_predictions(img, predictions=None, S=7):
+    img = show_grid(img, S)
+    img = show_objects(img, predictions)
+    return img
 
 
 def show_grid(img, grid_size):
@@ -202,12 +215,13 @@ def show_objects(img, predictions, object_threshold=0.6, S=7, B=2):
 
     return img
 
+
 def show_gt(img, target, S=7):
-    for obj in target: 
+    for obj in target:
         cell_num = obj[0]
         i = torch.div(cell_num, S, rounding_mode='floor').long()
         j = (cell_num - (i * S)).long()
-        
+
         x_rel, y_rel, w_rel, h_rel = obj[1:5]
 
         x, y, w, h = convert_to_apsolute(x_rel, y_rel, w_rel, h_rel, i, j, 448, 448)
@@ -219,15 +233,18 @@ def show_gt(img, target, S=7):
         x_lower, y_lower = x + w / 2, y + h / 2
 
         cv2.rectangle(img, (int(x_upper), int(y_upper)), (int(x_lower), int(y_lower)), (0, 0, 255), 2)
-    
+
     return img
+
 
 def show_grid(img, grid_size):
     # Step 1: Calculate grid size and spacing
+    print(img.shape, 'shape')
+
     rows, cols, _ = img.shape
     grid_size = 7
-    grid_spacing_rows = rows // (grid_size)
-    grid_spacing_cols = cols // (grid_size)
+    grid_spacing_rows = rows // grid_size
+    grid_spacing_cols = cols // grid_size
 
     # Step 2: Draw grid lines on the image
     for i in range(1, grid_size):
@@ -249,8 +266,6 @@ def draw_ground_truth(img, target, S=7):
     cv2.imshow("YOLOnaut", img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-
-
 
 # classes = {
 #     0: 'aeroplane',

@@ -87,6 +87,7 @@ torch.set_printoptions(threshold=sys.maxsize)
 # torch.save(yolo.state_dict(), '/home/dels/Documents/YOLOnaut/models/initial_model.pth')
 
 
+
 S = 7
 B = 2
 C = 20
@@ -103,6 +104,22 @@ def save_evaluations(image_name, predictions):
 print(outputs.reshape((S, S, 5 * B + C)))
 save_evaluations('2008_000015.jpg', outputs.reshape((S, S, 5 * B + C)))
 exit()
+# S = 7
+# B = 2
+# C = 20
+# model = YOLO.YOLO()
+# model.load_state_dict(torch.load('/models/initial_model.pth'))
+# # print(train_dataset.__getitem__(0)[1])
+# outputs = model(torch.unsqueeze(train_dataset.__getitem__(0)[0], 0))
+# def save_evaluations(image_name, predictions):
+#     image_path = os.path.join('/home/dels/Documents/YOLOnaut/data/VOCdevkit/VOC2012/JPEGImages', image_name)
+#     image_with_evaluation = utils.draw_image(image_path, predictions)
+#
+#     save_path = image_path.replace('JPEGImages', 'JPEGEvaluations')
+#     cv2.imwrite(save_path, image_with_evaluation)
+# print(outputs.reshape((S, S, 5 * B + C)))
+# save_evaluations('2011_002348.jpg', outputs.reshape((S, S, 5 * B + C)))
+# exit()
 from contextlib import redirect_stdout
 # orig_stdout = sys.stdout
 # f = open('/home/dels/Desktop/out.txt', 'w')
