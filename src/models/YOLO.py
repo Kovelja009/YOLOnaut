@@ -44,5 +44,5 @@ class YOLO(torch.nn.Module):
         x = self.backbone(x)
         x = self.pool(x)
         x = self.conv(x)
-
+        # TODO: Reshape to (S, S, 5 * B + C)
         return x
