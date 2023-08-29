@@ -4,7 +4,7 @@ Project for Practical Seminar in Machine Learning (PSI:ML) 9.
 
 ### Authors
 This project was collaboratively developed by:  
-- [Karlo  Delić, ETF Department of Mathematics, Department of Mathematics, University of Zagreb](https://github.com/dels1997)  
+- [Karlo  Delić, Department of Mathematics, University of Zagreb](https://github.com/dels1997)  
 - [Vanja Kovinić, Computer Science at RAF](https://github.com/Kovelja009)  
 
 Implementation of  YOLOv1 from scratch using Resnet50 as a backbone network.
